@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import logo from './logo.svg';
 import './App.css';
 
 import firebase from 'firebase';
@@ -27,11 +26,71 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 function App() {
-  const [name, setName] = useState('');
+  const [name, setName] = useState('tom');
   const [age, setAge] = useState(20);
-  const [isValid, setIsValid] = useState(false);
 
-  return <div className="App"></div>;
+  const handleNameChange = (e) => {
+    setName(e.target.value);
+  };
+  const handleAgeChange = (e) => {
+    setAge(e.target.value);
+  };
+
+  const handleListClick = (e) => {
+    db.collection('users')
+      // .doc('8R0cQb7K56xA9fO5dBH1')
+      .get()
+      .then((snapshot) => {
+        snapshot.forEach((doc) => {
+          console.log(doc.id, '=>', doc.data());
+        });
+      })
+      .catch((err) => console.log(err));
+  };
+
+  const handleSaveClick = (e) => {
+    db.collection('users')
+      // .doc('8R0cQb7K56xA9fO5dBH1')
+      .add({
+        name,
+        age,
+        isValid: true,
+      })
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
+  };
+
+  return (
+    <div className="App">
+      <h3>
+        Name:{name}, Age:{age}
+      </h3>
+      <div>
+        <input
+          type="text"
+          value={name}
+          onChange={handleNameChange}
+          placeholder="Name"
+        ></input>
+      </div>
+
+      <div>
+        <input
+          type="number"
+          value={age}
+          onChange={handleAgeChange}
+          placeholder="Age"
+        ></input>
+      </div>
+
+      <button type="button" onClick={handleSaveClick}>
+        Save
+      </button>
+      <button type="button" onClick={handleListClick}>
+        List
+      </button>
+    </div>
+  );
 }
 
 export default App;
