@@ -22,6 +22,7 @@ const firebaseConfig = {
  * Initialize firebase
  */
 firebase.initializeApp(firebaseConfig);
+firebase.analytics();
 
 const db = firebase.firestore();
 
@@ -46,6 +47,11 @@ function App() {
         });
       })
       .catch((err) => console.log(err));
+  };
+
+  const handleEventClick = (e) => {
+    const analytics = firebase.analytics();
+    analytics.logEvent('test_event');
   };
 
   const handleSaveClick = (e) => {
@@ -73,7 +79,6 @@ function App() {
           placeholder="Name"
         ></input>
       </div>
-
       <div>
         <input
           type="number"
@@ -82,12 +87,14 @@ function App() {
           placeholder="Age"
         ></input>
       </div>
-
       <button type="button" onClick={handleSaveClick}>
         Save
       </button>
       <button type="button" onClick={handleListClick}>
         List
+      </button>
+      <button type="button" onClick={handleEventClick}>
+        Event
       </button>
     </div>
   );
